@@ -1,0 +1,9 @@
+@namespace svg "http://www.w3.org/2000/svg";
+@media oxygen and (platform:webapp) {
+  svg|svg {
+    content: oxy_editor(
+      webappRendererClassName, "com.oxygenxml.sdksamples.svg.SvgRenderer"
+      edit, "custom");
+    visibility:-oxy-collapse-text;
+  }
+}

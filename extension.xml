@@ -1,0 +1,21 @@
+<xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
+    id="com.oxygenxml.sdksamples.addons.SvgPlugin">
+    <xt:location href="${project.build.finalName}-plugin.jar"/>
+    <xt:version>${project.parent.version}.0</xt:version>
+    <xt:oxy_version>${project.parent.version}</xt:oxy_version>
+    <xt:type>plugin</xt:type>
+    <xt:author>Oxygen XML Editor</xt:author>
+    <xt:name>Svg Plugin</xt:name>
+    <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>Svg Plugin</title>
+            </head>
+            <body>
+                <div> Svg plugin is a sample plug-in used to define vector-based graphics. </div>
+            </body>
+        </html>
+    </xt:description>
+    <xt:license><![CDATA[(c) Syncro Soft , All rights reserved.
+This Plug-In is part of the Oxygen XML Software and, as such, is part of the License Agreement governing the Oxygen XML Software.
+]]></xt:license>
+</xt:extension>
