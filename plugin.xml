@@ -15,4 +15,6 @@
     </runtime>
     <extension type="AuthorStylesheet" href="web/svg.css"/>
     <extension type="WebappServlet" class="com.oxygenxml.sdksamples.svg.SvgServlet"/>
+    <extension type="WebappStaticResourcesFolder" path="resources" href="svg-resources"/>
+    
 </plugin>

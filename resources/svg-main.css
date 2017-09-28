@@ -1,0 +1,4 @@
+/* WA-1516: having the form-control span inline-block instead of inline helps when SVGs do nothave an intrinsic width.*/
+[data-role="form-control"][data-type="com.oxygenxml.sdksamples.svg.SvgRenderer"] {
+  display: inline;
+}
