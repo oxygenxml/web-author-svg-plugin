@@ -10,7 +10,9 @@
   <artifactId>web-author-svg-plugin</artifactId>
   
   <developers>
-    <developer>cristi_talau</developer>
+    <developer>
+      <email>cristi_talau@sync.ro</email>
+    </developer>
   </developers>
 
   <build>
