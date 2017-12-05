@@ -2,6 +2,8 @@ package com.oxygenxml.sdksamples.svg;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -9,6 +11,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
+import ro.sync.ecss.extensions.api.node.AuthorDocumentFragment;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
@@ -36,6 +39,14 @@ public class PerDocumentEquationSvgTest {
     Mockito.when(documentModel.getNodeIndexer()).thenReturn(new AuthorIdIndexImpl(nodes));
     AuthorDocumentController controller = Mockito.mock(AuthorDocumentController.class);
     Mockito.when(documentModel.getAuthorDocumentController()).thenReturn(controller);
+    
+    // We do not care about the namespace fix in this test so we avoid it.
+    AuthorDocumentFragment svgFrag = Mockito.mock(AuthorDocumentFragment.class);
+    ArrayList<AuthorNode> fakeContentNodes = new ArrayList<AuthorNode>();
+    // Skips code execution by avoiding 'instance of' condition
+    fakeContentNodes.add(Mockito.mock(AuthorNode.class));
+    Mockito.when(svgFrag.getContentNodes()).thenReturn(fakeContentNodes);
+    Mockito.when(controller.createDocumentFragment(Mockito.any(), Mockito.eq(true))).thenReturn(svgFrag);
     
     PerDocumentSvgCache cache = new PerDocumentSvgCache(documentModel);
     
@@ -68,6 +79,14 @@ public class PerDocumentEquationSvgTest {
     Mockito.when(documentModel.getNodeIndexer()).thenReturn(new AuthorIdIndexImpl(nodes));
     AuthorDocumentController controller = Mockito.mock(AuthorDocumentController.class);
     Mockito.when(documentModel.getAuthorDocumentController()).thenReturn(controller);
+    
+    // We do not care about the namespace fix in this test so we avoid it.
+    AuthorDocumentFragment svgFrag = Mockito.mock(AuthorDocumentFragment.class);
+    ArrayList<AuthorNode> fakeContentNodes = new ArrayList<AuthorNode>();
+    // Skips code execution by avoiding 'instance of' condition
+    fakeContentNodes.add(Mockito.mock(AuthorNode.class));
+    Mockito.when(svgFrag.getContentNodes()).thenReturn(fakeContentNodes);
+    Mockito.when(controller.createDocumentFragment(Mockito.any(), Mockito.eq(true))).thenReturn(svgFrag);
     
     PerDocumentSvgCache cache = new PerDocumentSvgCache(documentModel);
     AuthorElement node1 = Mockito.mock(AuthorElement.class);
