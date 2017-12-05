@@ -1,13 +1,16 @@
 package com.oxygenxml.sdksamples.svg;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.text.BadLocationException;
 
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
+import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorDocumentFragment;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
+import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
 
 /**
@@ -16,6 +19,8 @@ import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
  * @author cristi_talau
  */
 public class PerDocumentSvgCache {
+
+  private static final String XMLNS_SVG_NAMESPACE = "xmlns:svg";
 
   /**
    * The document model.
@@ -49,10 +54,21 @@ public class PerDocumentSvgCache {
    */
   public synchronized long freezeSvgFrag(AuthorElement elem) throws BadLocationException {
     long elemId = docModel.getNodeIndexer().getId(elem);
-    
     AuthorDocumentController documentController = docModel.getAuthorDocumentController();
     AuthorDocumentFragment svgFrag = documentController
         .createDocumentFragment(elem, true);
+    // Browsers need the 'svg' namespace defined.
+    List<AuthorNode> contentNodes = svgFrag.getContentNodes();
+    AuthorNode copyNode = contentNodes.get(0);
+    if (copyNode instanceof AuthorElement) {
+      AuthorElement copyElem = (AuthorElement) copyNode;
+      AttrValue xmlnsSvg = copyElem.getAttribute(XMLNS_SVG_NAMESPACE);
+      if(!xmlnsSvg.isSpecified()) {
+        String namespaceValue = xmlnsSvg.getValue();
+        copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
+      }
+    }
+    
     String xml = documentController.serializeFragmentToXML(svgFrag);
     
     svgElements.put(elemId, xml);
