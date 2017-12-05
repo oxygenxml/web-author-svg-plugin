@@ -10,14 +10,17 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.editor.AuthorInplaceContext;
+import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorDocumentFragment;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
+import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.ecss.extensions.api.webapp.formcontrols.WebappFormControlRenderer;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.util.PrettyPrintException;
@@ -47,7 +50,11 @@ public class SvgRenderer extends WebappFormControlRenderer {
     cacheFolder = new File(tempdir, "tmpsvg");
     cacheFolder.mkdirs();
   }
-
+  /**
+   * The SVG namespace attribute key. 
+   */
+  private static final String XMLNS_SVG_NAMESPACE = "xmlns:svg";
+  
   /**
    * Render control.
    * 
@@ -66,6 +73,19 @@ public class SvgRenderer extends WebappFormControlRenderer {
     
     try {
       AuthorDocumentFragment svgFrag = documentController.createDocumentFragment(svgElement, true);
+      
+      // Browsers need the 'svg' namespace defined.
+      List<AuthorNode> contentNodes = svgFrag.getContentNodes();
+      AuthorNode copyNode = contentNodes.get(0);
+      if (copyNode instanceof AuthorElement) {
+        AuthorElement copyElem = (AuthorElement) copyNode;
+        AttrValue xmlnsSvg = copyElem.getAttribute(XMLNS_SVG_NAMESPACE);
+        if(!xmlnsSvg.isSpecified()) {
+          String namespaceValue = xmlnsSvg.getValue();
+          copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
+        }
+      }
+      
       String xmlSvgFrag = documentController.serializeFragmentToXML(svgFrag);
       String xmlSvgFragPPed = this.formatAndIndentXmlFragment(xmlSvgFrag, systemID);
       
