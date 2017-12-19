@@ -80,7 +80,7 @@ public class SvgRenderer extends WebappFormControlRenderer {
       if (copyNode instanceof AuthorElement) {
         AuthorElement copyElem = (AuthorElement) copyNode;
         AttrValue xmlnsSvg = copyElem.getAttribute(XMLNS_SVG_NAMESPACE);
-        if(!xmlnsSvg.isSpecified()) {
+        if(xmlnsSvg != null && !xmlnsSvg.isSpecified()) {
           String namespaceValue = xmlnsSvg.getValue();
           copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
         }
