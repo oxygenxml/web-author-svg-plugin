@@ -44,7 +44,7 @@ public class SvgRenderer extends WebappFormControlRenderer {
     try {
       long elemId = equationCache.freezeSvgFrag(svgElement);
       String xmlSvgFrag = equationCache.getXmlFragment(elemId);
-      String svgHash = DigestUtils.sha1Hex(xmlSvgFrag);
+      String svgHash = DigestUtils.shaHex(xmlSvgFrag);
 
       // The actual html fragment that is being sent to the browser. 
       out.append("<img class=\"svg-image\" src=\"../plugins-dispatcher/svg?"
