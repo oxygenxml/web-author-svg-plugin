@@ -10,7 +10,13 @@
   <artifactId>web-author-svg-plugin</artifactId>
   <name>Web Author SVG Plugin</name>
   <description>Plugin that adds support for embedded SVG in Web Author</description>
-  
+
+  <licenses>
+    <license>
+      <url>http://www.oxygenxml.com/sdk_agreement.html</url>
+    </license>
+  </licenses>
+
   <developers>
     <developer>
       <email>cristi_talau@sync.ro</email>
