@@ -57,6 +57,11 @@ public class SvgRenderer extends WebappFormControlRenderer {
     }
   }
 
+  @Override
+  public boolean isChangeTrackingAware() {
+    return true;
+  }
+
   /**
    * @return Returns the description of the renderer.
    */
