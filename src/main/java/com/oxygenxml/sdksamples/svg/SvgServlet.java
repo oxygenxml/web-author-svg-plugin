@@ -40,10 +40,10 @@ public class SvgServlet extends WebappServletPluginExtension {
       String xml = svgCache.getXmlFragment(Long.valueOf(elemId));
       
 	    // mime type, cache, image content
-	    ByteStreams.copy(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)), httpResponse.getOutputStream());
 	    httpResponse.setHeader("Cache-Control", "max-age=31536000");
 	    httpResponse.setHeader("Content-Type", MediaType.SVG_UTF_8.toString());
 	    httpResponse.setHeader("Vary", "Accept-Encoding");
+	    ByteStreams.copy(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)), httpResponse.getOutputStream());
 	  } else {
 	    httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND, "SVG file was not found.");
 	  }
