@@ -17,4 +17,5 @@
     <extension type="WebappServlet" class="com.oxygenxml.sdksamples.svg.SvgServlet"/>
     <extension type="WebappStaticResourcesFolder" path="resources" href="svg-resources"/>
     <extension type="WorkspaceAccess" class="com.oxygenxml.sdksamples.svg.EditingSessionContextManager"/>
+    <extension type="WebappCSSResource" href="resources/svg-main.css"/>
 </plugin>

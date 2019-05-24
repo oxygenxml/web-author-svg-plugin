@@ -1,1 +1,1 @@
-sync.util.loadCSSFile('../plugin-resources/svg-resources/svg-main.css');
+
