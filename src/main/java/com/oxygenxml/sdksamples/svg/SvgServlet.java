@@ -11,8 +11,8 @@ import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.MediaType;
 
+import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.access.EditingSessionContext;
-import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
 import ro.sync.ecss.extensions.api.webapp.plugin.WebappServletPluginExtension;
 
 /**
@@ -32,9 +32,9 @@ public class SvgServlet extends WebappServletPluginExtension {
 	  String docId = httpRequest.getParameter("docId");
 	  String elemId = httpRequest.getParameter("elemId");
 	  
-	  AuthorDocumentModel doc = EditingSessionContextManager.getDocument(docId);
-    if (doc != null) {
-      EditingSessionContext editingContext = doc.getAuthorAccess().getEditorAccess().getEditingContext();
+	  AuthorAccess authorAccess = EditingSessionContextManager.getDocument(docId);
+    if (authorAccess != null) {
+      EditingSessionContext editingContext = authorAccess.getEditorAccess().getEditingContext();
       PerDocumentSvgCache svgCache = (PerDocumentSvgCache) editingContext.getAttribute(EditingSessionContextManager.SVG_CACHE);
       
       String xml = svgCache.getXmlFragment(Long.valueOf(elemId));

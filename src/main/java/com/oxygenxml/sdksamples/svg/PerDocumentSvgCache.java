@@ -1,17 +1,15 @@
 package com.oxygenxml.sdksamples.svg;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.function.Function;
 
 import javax.swing.text.BadLocationException;
 
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
-import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorDocumentFragment;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
-import ro.sync.ecss.extensions.api.node.AuthorNode;
-import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
 
 /**
  * Cache of equation descriptors per opened document.
@@ -20,12 +18,10 @@ import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
  */
 public class PerDocumentSvgCache {
 
-  private static final String XMLNS_SVG_NAMESPACE = "xmlns:svg";
-
   /**
-   * The document model.
+   * The document controller.
    */
-  private final AuthorDocumentModel docModel;
+  private final AuthorDocumentController docController;
   
   /**
    * Map from node identifiers to SVG fragments. 
@@ -36,40 +32,38 @@ public class PerDocumentSvgCache {
    * The cache size after the last compaction.
    */
   private long lastCompactedCacheSize = 4L;
+  
+  Map<AuthorElement, Long> nodeIndexer = new WeakHashMap<>();
+  
+  private long counter = 0;
 
   /**
    * Constructor.
    */
-  public PerDocumentSvgCache(AuthorDocumentModel docModel) {
-    this.docModel = docModel;
+  public PerDocumentSvgCache(AuthorDocumentController controller) {
+    this.docController = controller;
   }
 
   /**
    * Freezes the XML content that corresponds to the given element.
    * 
    * @param elem The author element.
+   * 
    * @return The id of the cache entry.
    * 
    * @throws BadLocationException
    */
   public synchronized long freezeSvgFrag(AuthorElement elem) throws BadLocationException {
-    long elemId = docModel.getNodeIndexer().getId(elem);
-    AuthorDocumentController documentController = docModel.getAuthorDocumentController();
-    AuthorDocumentFragment svgFrag = documentController
-        .createDocumentFragment(elem, true);
-    // Browsers need the 'svg' namespace defined.
-    List<AuthorNode> contentNodes = svgFrag.getContentNodes();
-    AuthorNode copyNode = contentNodes.get(0);
-    if (copyNode instanceof AuthorElement) {
-      AuthorElement copyElem = (AuthorElement) copyNode;
-      AttrValue xmlnsSvg = copyElem.getAttribute(XMLNS_SVG_NAMESPACE);
-      if(xmlnsSvg != null && !xmlnsSvg.isSpecified()) {
-        String namespaceValue = xmlnsSvg.getValue();
-        copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
+    long elemId = nodeIndexer.computeIfAbsent(elem, new Function<AuthorElement, Long>() {
+      @Override
+      public Long apply(AuthorElement t) {
+        return counter++;
       }
-    }
+    });
     
-    String xml = documentController.serializeFragmentToXML(svgFrag);
+    AuthorDocumentFragment mathMlFrag = docController
+        .createDocumentFragment(elem, true);
+    String xml = docController.serializeFragmentToXML(mathMlFrag);
     
     svgElements.put(elemId, xml);
     if (svgElements.size() > 2 * lastCompactedCacheSize) {
@@ -82,9 +76,9 @@ public class PerDocumentSvgCache {
   /**
    * Compact the cache, removing entries that correspond to stale AuthorElements.
    */
+  @SuppressWarnings("unlikely-arg-type")
   private void compactCache() {
-    svgElements.entrySet().removeIf(
-        entry -> docModel.getNodeIndexer().getObjectById(entry.getKey()) == null);
+    svgElements.entrySet().removeIf(entry -> !nodeIndexer.containsKey(entry.getKey()));
   }
   
   /**

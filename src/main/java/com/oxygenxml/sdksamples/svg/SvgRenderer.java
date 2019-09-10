@@ -6,6 +6,7 @@ import java.io.Writer;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
+import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.access.EditingSessionContext;
 import ro.sync.ecss.extensions.api.editor.AuthorInplaceContext;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
@@ -36,7 +37,10 @@ public class SvgRenderer extends WebappFormControlRenderer {
       throws IOException {
     AuthorElement svgElement = context.getElem();
     
-    EditingSessionContext editingContext = context.getAuthorAccess().getEditorAccess().getEditingContext();
+    AuthorAccess authorAccess = context.getAuthorAccess();
+    EditingSessionContextManager.ensureInitialized(authorAccess);
+    EditingSessionContext editingContext = authorAccess.getEditorAccess().getEditingContext();
+    
     PerDocumentSvgCache equationCache = 
         (PerDocumentSvgCache) editingContext.getAttribute(EditingSessionContextManager.SVG_CACHE);
     String docId = (String) editingContext.getAttribute(EditingSessionContextManager.DOCUMENT_MODEL_ID);

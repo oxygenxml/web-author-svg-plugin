@@ -48,7 +48,7 @@ public class PerDocumentEquationSvgTest {
     Mockito.when(svgFrag.getContentNodes()).thenReturn(fakeContentNodes);
     Mockito.when(controller.createDocumentFragment(Mockito.any(), Mockito.eq(true))).thenReturn(svgFrag);
     
-    PerDocumentSvgCache cache = new PerDocumentSvgCache(documentModel);
+    PerDocumentSvgCache cache = new PerDocumentSvgCache(documentModel.getAuthorDocumentController());
     
     // Assert that we insert an equation and immediately delete it in 100 different places.
     // The cache should not keep too many entries for equations that are already deleted.
@@ -88,7 +88,7 @@ public class PerDocumentEquationSvgTest {
     Mockito.when(svgFrag.getContentNodes()).thenReturn(fakeContentNodes);
     Mockito.when(controller.createDocumentFragment(Mockito.any(), Mockito.eq(true))).thenReturn(svgFrag);
     
-    PerDocumentSvgCache cache = new PerDocumentSvgCache(documentModel);
+    PerDocumentSvgCache cache = new PerDocumentSvgCache(documentModel.getAuthorDocumentController());
     AuthorElement node1 = Mockito.mock(AuthorElement.class);
     nodes.put(1L, node1);
     Mockito.when(controller.serializeFragmentToXML(Mockito.any())).thenReturn("<svg>1</svg>");

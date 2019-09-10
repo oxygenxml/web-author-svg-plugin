@@ -32,19 +32,18 @@ public class EditingSessionContextManagerTest {
    */
   @Test
   public void testNoLeak() throws Exception {
-    EditingSessionContextManager mgr = new EditingSessionContextManager();
     AuthorDocumentModel documentModel = createDocumentModel();
     EditingSessionContextImpl ctx = new EditingSessionContextImpl();
     Mockito.when(documentModel.getAuthorAccess().getEditorAccess().getEditingContext()).thenReturn(ctx);
     
-    mgr.documentOpened(documentModel);
+    EditingSessionContextManager.ensureInitialized(documentModel.getAuthorAccess());
     
     assertNotNull(ctx.docId);
     assertEquals(40, ctx.docId.length());
     documentModel = null;
     System.gc();
     
-    AuthorDocumentModel document = EditingSessionContextManager.getDocument(ctx.docId);
+    AuthorAccess document = EditingSessionContextManager.getDocument(ctx.docId);
     assertNull(document);
   }
 

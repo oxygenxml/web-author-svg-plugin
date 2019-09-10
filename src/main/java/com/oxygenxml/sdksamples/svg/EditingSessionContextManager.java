@@ -7,19 +7,15 @@ import org.apache.commons.codec.binary.Hex;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.access.EditingSessionContext;
-import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
-import ro.sync.ecss.extensions.api.webapp.access.WebappEditingSessionLifecycleListener;
-import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
-import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
-import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 /**
  * Plugin that adds several editing context attributes.
  * 
  * @author cristi_talau
  */
-public class EditingSessionContextManager implements WorkspaceAccessPluginExtension {
+public class EditingSessionContextManager {
   /**
    * The ID of the document model.
    */
@@ -38,45 +34,29 @@ public class EditingSessionContextManager implements WorkspaceAccessPluginExtens
   /**
    * The global cache of active documents.
    */
-  private static final Cache<String, AuthorDocumentModel> activeDocsCache = CacheBuilder.newBuilder()
+  private static final Cache<String, AuthorAccess> activeDocsCache = CacheBuilder.newBuilder()
       .weakValues()
       .build();
-
-  @Override
-  public void applicationStarted(StandalonePluginWorkspace pluginWorkspaceAccess) {
-    WebappPluginWorkspace webappPlugin = (WebappPluginWorkspace) pluginWorkspaceAccess;
-    webappPlugin.addEditingSessionLifecycleListener(new WebappEditingSessionLifecycleListener() {
-      @Override
-      public void editingSessionStarted(String sessionId, AuthorDocumentModel documentModel) {
-        documentOpened(documentModel);
-      }
-
-    });
-    
-  }
-
-  @Override
-  public boolean applicationClosing() {
-    return true;
-  }
 
   /**
    * Sets up the editing context when the document is opened.
    * 
    * @param documentModel The document model that was opened.
    */
-  void documentOpened(AuthorDocumentModel documentModel) {
-    EditingSessionContext editingContext = documentModel.getAuthorAccess().getEditorAccess().getEditingContext();
-    String docId = generateId();
-    activeDocsCache.put(docId, documentModel);
-    editingContext.setAttribute(DOCUMENT_MODEL_ID, docId);
-    editingContext.setAttribute(SVG_CACHE, new PerDocumentSvgCache(documentModel));
+  public static void ensureInitialized(AuthorAccess authorAccess) {
+    EditingSessionContext editingContext = authorAccess.getEditorAccess().getEditingContext();
+    if (editingContext.getAttribute(DOCUMENT_MODEL_ID) == null) {
+      String docId = generateId();
+      activeDocsCache.put(docId, authorAccess);
+      editingContext.setAttribute(DOCUMENT_MODEL_ID, docId);
+      editingContext.setAttribute(SVG_CACHE, new PerDocumentSvgCache(authorAccess.getDocumentController()));
+    }
   }
 
   /**
    * @return A secure unique random ID.
    */
-  private String generateId() {
+  private static String generateId() {
     byte[] bytes = new byte[20];
     random.nextBytes(bytes);
     return Hex.encodeHexString(bytes);
@@ -87,9 +67,9 @@ public class EditingSessionContextManager implements WorkspaceAccessPluginExtens
    * 
    * @param docId The document ID.
    * 
-   * @return The document model.
+   * @return The document author access.
    */
-  public static AuthorDocumentModel getDocument(String docId) {
+  public static AuthorAccess getDocument(String docId) {
     return activeDocsCache.getIfPresent(docId);
   }
 }
