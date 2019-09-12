@@ -33,12 +33,20 @@ public class PerDocumentSvgCache {
    */
   private long lastCompactedCacheSize = 4L;
   
+  /**
+   * The nodes indexer.
+   */
   Map<AuthorElement, Long> nodeIndexer = new WeakHashMap<>();
   
+  /**
+   * counter used for indexing nodes.
+   */
   private long counter = 0;
 
   /**
    * Constructor.
+   * 
+   * @param controller the author document controller.
    */
   public PerDocumentSvgCache(AuthorDocumentController controller) {
     this.docController = controller;
