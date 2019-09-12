@@ -43,7 +43,7 @@ public class SvgRenderer extends WebappFormControlRenderer {
     
     PerDocumentSvgCache equationCache = 
         (PerDocumentSvgCache) editingContext.getAttribute(EditingSessionContextManager.SVG_CACHE);
-    String docId = (String) editingContext.getAttribute(EditingSessionContextManager.DOCUMENT_MODEL_ID);
+    String docId = (String) editingContext.getAttribute(EditingSessionContextManager.AUTHOR_ACCESS_ID);
 
     try {
       long elemId = equationCache.freezeSvgFrag(svgElement);

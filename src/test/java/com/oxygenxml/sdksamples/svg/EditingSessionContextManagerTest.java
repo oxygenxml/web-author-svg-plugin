@@ -89,7 +89,7 @@ public class EditingSessionContextManagerTest {
 
     @Override
     public void setAttribute(String attr, Object value) {
-      if (attr.equals(EditingSessionContextManager.DOCUMENT_MODEL_ID)) {
+      if (attr.equals(EditingSessionContextManager.AUTHOR_ACCESS_ID)) {
         docId = (String) value;
       }
     }

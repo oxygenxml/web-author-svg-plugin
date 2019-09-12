@@ -17,9 +17,9 @@ import ro.sync.ecss.extensions.api.access.EditingSessionContext;
  */
 public class EditingSessionContextManager {
   /**
-   * The ID of the document model.
+   * The ID of the author access.
    */
-  static final String DOCUMENT_MODEL_ID = "com.oxygenxml.sdksamples.svg.doc_id";
+  static final String AUTHOR_ACCESS_ID = "com.oxygenxml.sdksamples.svg.author_access_id";
   
   /**
    * {@link EditingSessionContext} attribute that points to the SVG cache.
@@ -32,9 +32,9 @@ public class EditingSessionContextManager {
   private static final SecureRandom random = new SecureRandom();
   
   /**
-   * The global cache of active documents.
+   * The global cache of active author accesse.
    */
-  private static final Cache<String, AuthorAccess> activeDocsCache = CacheBuilder.newBuilder()
+  private static final Cache<String, AuthorAccess> activeAuthorAccessCache = CacheBuilder.newBuilder()
       .weakValues()
       .build();
 
@@ -45,10 +45,10 @@ public class EditingSessionContextManager {
    */
   public static void ensureInitialized(AuthorAccess authorAccess) {
     EditingSessionContext editingContext = authorAccess.getEditorAccess().getEditingContext();
-    if (editingContext.getAttribute(DOCUMENT_MODEL_ID) == null) {
+    if (editingContext.getAttribute(AUTHOR_ACCESS_ID) == null) {
       String docId = generateId();
-      activeDocsCache.put(docId, authorAccess);
-      editingContext.setAttribute(DOCUMENT_MODEL_ID, docId);
+      activeAuthorAccessCache.put(docId, authorAccess);
+      editingContext.setAttribute(AUTHOR_ACCESS_ID, docId);
       editingContext.setAttribute(SVG_CACHE, new PerDocumentSvgCache(authorAccess.getDocumentController()));
     }
   }
@@ -63,13 +63,13 @@ public class EditingSessionContextManager {
   }
 
   /**
-   * Returns the document stored with the document ID.
+   * Returns the author access stored with the ID.
    * 
-   * @param docId The document ID.
+   * @param authorAccessId The author access ID.
    * 
    * @return The document author access.
    */
-  public static AuthorAccess getDocument(String docId) {
-    return activeDocsCache.getIfPresent(docId);
+  public static AuthorAccess getDocument(String authorAccessId) {
+    return activeAuthorAccessCache.getIfPresent(authorAccessId);
   }
 }
