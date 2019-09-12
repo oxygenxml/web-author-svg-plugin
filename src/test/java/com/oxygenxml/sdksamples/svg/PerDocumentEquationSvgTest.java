@@ -3,7 +3,6 @@ package com.oxygenxml.sdksamples.svg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +59,6 @@ public class PerDocumentEquationSvgTest {
    */
   @Test
   public void testCacheCompaction() throws Exception {
-    BiMap<Long, AuthorNode> nodes = HashBiMap.create();
     AuthorDocumentControllerMock controller = new AuthorDocumentControllerMock();
     
     PerDocumentSvgCache cache = new PerDocumentSvgCache(controller);
@@ -69,15 +67,22 @@ public class PerDocumentEquationSvgTest {
     // The cache should not keep too many entries for equations that are already deleted.
     for (int i = 0; i < 100; i++) {
       AuthorElement node = Mockito.mock(AuthorElement.class);
-      nodes.clear();
-      nodes.put(i + 0L, node);
       String eq = "<svg>" + i + "</svg>";
       controller.setSerializeReturn(eq);
+      
       long id = cache.freezeSvgFrag(node);
       assertEquals(eq, cache.getXmlFragment(id));
       
-      // force memory cleanup.
-      System.gc();
+      // wait for up to 5 seconds for the garbage collect
+      for(int j = 0; j < 50; j++) {
+        System.gc();
+        
+        if(cache.getSize() <= 8) {
+          break;
+        }
+        // force memory cleanup.
+        Thread.sleep(100);
+      }
       
       assertTrue(cache.getSize() <= 8);
     }
@@ -94,26 +99,18 @@ public class PerDocumentEquationSvgTest {
   @Test
   public void testCacheCorrectness() throws Exception {
     BiMap<Long, AuthorNode> nodes = HashBiMap.create();
-    AuthorDocumentController controller = Mockito.mock(AuthorDocumentController.class);
-    
-    // We do not care about the namespace fix in this test so we avoid it.
-    AuthorDocumentFragment svgFrag = Mockito.mock(AuthorDocumentFragment.class);
-    ArrayList<AuthorNode> fakeContentNodes = new ArrayList<AuthorNode>();
-    // Skips code execution by avoiding 'instance of' condition
-    fakeContentNodes.add(Mockito.mock(AuthorNode.class));
-    Mockito.when(svgFrag.getContentNodes()).thenReturn(fakeContentNodes);
-    Mockito.when(controller.createDocumentFragment(Mockito.any(), Mockito.eq(true))).thenReturn(svgFrag);
+    AuthorDocumentControllerMock controller = new AuthorDocumentControllerMock();
     
     PerDocumentSvgCache cache = new PerDocumentSvgCache(controller);
     AuthorElement node1 = Mockito.mock(AuthorElement.class);
     nodes.put(1L, node1);
-    Mockito.when(controller.serializeFragmentToXML(Mockito.any())).thenReturn("<svg>1</svg>");
+    controller.setSerializeReturn("<svg>1</svg>");
     long node1ID = cache.freezeSvgFrag(node1);
     
     
     AuthorElement node2 = Mockito.mock(AuthorElement.class);
     nodes.put(2L, node2);
-    Mockito.when(controller.serializeFragmentToXML(Mockito.any())).thenReturn("<svg>2</svg>");
+    controller.setSerializeReturn("<svg>2</svg>");
     long node2ID = cache.freezeSvgFrag(node2);
     
     assertEquals("<svg>1</svg>", cache.getXmlFragment(node1ID));
@@ -148,14 +145,7 @@ public class PerDocumentEquationSvgTest {
     @Override
     public AuthorDocumentFragment createDocumentFragment(AuthorNode node, boolean copyContent)
         throws BadLocationException {
-      // Skips code execution by avoiding 'instance of' condition
-      ArrayList<AuthorNode> fakeContentNodes = new ArrayList<AuthorNode>();
-      fakeContentNodes.add(Mockito.mock(AuthorNode.class));
-
-      
-      AuthorDocumentFragment svgFrag = Mockito.mock(AuthorDocumentFragment.class);
-      Mockito.when(svgFrag.getContentNodes()).thenReturn(fakeContentNodes);
-      return svgFrag;
+      return Mockito.mock(AuthorDocumentFragment.class);
     }
 
     @Override

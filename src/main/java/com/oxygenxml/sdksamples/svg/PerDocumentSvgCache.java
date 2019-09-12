@@ -67,7 +67,6 @@ public class PerDocumentSvgCache {
     svgElements.put(elemId, xml);
     if (svgElements.size() > 2 * lastCompactedCacheSize) {
       compactCache();
-      lastCompactedCacheSize = svgElements.size();
     }
     return elemId;
   }
@@ -78,6 +77,7 @@ public class PerDocumentSvgCache {
   @SuppressWarnings("unlikely-arg-type")
   private void compactCache() {
     svgElements.entrySet().removeIf(entry -> !nodeIndexer.containsValue(entry.getKey()));
+    lastCompactedCacheSize = svgElements.size();
   }
   
   /**
