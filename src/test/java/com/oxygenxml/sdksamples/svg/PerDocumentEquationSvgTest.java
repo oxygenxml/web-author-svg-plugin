@@ -73,16 +73,11 @@ public class PerDocumentEquationSvgTest {
       long id = cache.freezeSvgFrag(node);
       assertEquals(eq, cache.getXmlFragment(id));
       
-      // wait for up to 5 seconds for the garbage collect
-      for(int j = 0; j < 50; j++) {
-        System.gc();
-        
-        if(cache.getSize() <= 8) {
-          break;
-        }
-        // force memory cleanup.
-        Thread.sleep(100);
-      }
+      System.gc();
+      System.runFinalization();
+      System.gc();
+      System.runFinalization();
+
       
       assertTrue(cache.getSize() <= 8);
     }
