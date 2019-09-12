@@ -61,8 +61,7 @@ public class PerDocumentSvgCache {
       }
     });
     
-    AuthorDocumentFragment mathMlFrag = docController
-        .createDocumentFragment(elem, true);
+    AuthorDocumentFragment mathMlFrag = docController.createDocumentFragment(elem, true);
     String xml = docController.serializeFragmentToXML(mathMlFrag);
     
     svgElements.put(elemId, xml);
@@ -78,7 +77,7 @@ public class PerDocumentSvgCache {
    */
   @SuppressWarnings("unlikely-arg-type")
   private void compactCache() {
-    svgElements.entrySet().removeIf(entry -> !nodeIndexer.containsKey(entry.getKey()));
+    svgElements.entrySet().removeIf(entry -> !nodeIndexer.containsValue(entry.getKey()));
   }
   
   /**
