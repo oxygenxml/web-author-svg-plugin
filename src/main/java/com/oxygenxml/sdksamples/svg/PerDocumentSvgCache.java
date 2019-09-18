@@ -23,6 +23,8 @@ import ro.sync.ecss.extensions.api.node.AuthorNode;
 public class PerDocumentSvgCache {
   
   private static final String XMLNS_SVG_NAMESPACE = "xmlns:svg";
+  
+  private static final String XMLNS_NAMESPACE = "xmlns";
 
   /**
    * The document controller.
@@ -82,8 +84,14 @@ public class PerDocumentSvgCache {
     AuthorNode copyNode = contentNodes.get(0);
     if (copyNode instanceof AuthorElement) {
       AuthorElement copyElem = (AuthorElement) copyNode;
+      
       AttrValue xmlnsSvg = copyElem.getAttribute(XMLNS_SVG_NAMESPACE);
-      if(!xmlnsSvg.isSpecified()) {
+      
+      if(xmlnsSvg == null || !xmlnsSvg.isSpecified()) {
+        xmlnsSvg = copyElem.getAttribute(XMLNS_NAMESPACE);
+      }
+      
+      if(xmlnsSvg == null || !xmlnsSvg.isSpecified()) {
         String namespaceValue = xmlnsSvg.getValue();
         copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
       }
