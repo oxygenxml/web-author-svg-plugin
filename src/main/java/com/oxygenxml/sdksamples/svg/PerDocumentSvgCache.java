@@ -81,19 +81,21 @@ public class PerDocumentSvgCache {
     
     // Browsers need the 'svg' namespace defined.
     List<AuthorNode> contentNodes = svgFrag.getContentNodes();
-    AuthorNode copyNode = contentNodes.get(0);
-    if (copyNode instanceof AuthorElement) {
-      AuthorElement copyElem = (AuthorElement) copyNode;
-      
-      AttrValue xmlnsSvg = copyElem.getAttribute(XMLNS_SVG_NAMESPACE);
-      
-      if(xmlnsSvg == null || !xmlnsSvg.isSpecified()) {
-        xmlnsSvg = copyElem.getAttribute(XMLNS_NAMESPACE);
-      }
-      
-      if(xmlnsSvg == null || !xmlnsSvg.isSpecified()) {
-        String namespaceValue = xmlnsSvg.getValue();
-        copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
+    if(!contentNodes.isEmpty()) {
+      AuthorNode copyNode = contentNodes.get(0);
+      if (copyNode instanceof AuthorElement) {
+        AuthorElement copyElem = (AuthorElement) copyNode;
+        
+        AttrValue xmlnsSvg = copyElem.getAttribute(XMLNS_SVG_NAMESPACE);
+        
+        if(xmlnsSvg == null || !xmlnsSvg.isSpecified()) {
+          xmlnsSvg = copyElem.getAttribute(XMLNS_NAMESPACE);
+        }
+        
+        if(xmlnsSvg == null || !xmlnsSvg.isSpecified()) {
+          String namespaceValue = xmlnsSvg.getValue();
+          copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
+        }
       }
     }
     String xml = docController.serializeFragmentToXML(svgFrag);
