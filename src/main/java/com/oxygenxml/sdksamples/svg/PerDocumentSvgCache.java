@@ -92,7 +92,21 @@ public class PerDocumentSvgCache {
           xmlnsSvg = copyElem.getAttribute(XMLNS_NAMESPACE);
         }
         
-        if(xmlnsSvg == null || !xmlnsSvg.isSpecified()) {
+        String namespaceValue = null;
+        if(xmlnsSvg != null && !xmlnsSvg.isSpecified()) {
+          namespaceValue = xmlnsSvg.getValue();
+        } else {
+          namespaceValue = "http://www.w3.org/2000/svg";
+        }
+        
+        copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
+      }
+      
+      /*AuthorNode */copyNode = contentNodes.get(0);
+      if (copyNode instanceof AuthorElement) {
+        AuthorElement copyElem = (AuthorElement) copyNode;
+        AttrValue xmlnsSvg = copyElem.getAttribute(XMLNS_SVG_NAMESPACE);
+        if(xmlnsSvg != null && !xmlnsSvg.isSpecified()) {
           String namespaceValue = xmlnsSvg.getValue();
           copyElem.setAttribute(XMLNS_SVG_NAMESPACE, new AttrValue(namespaceValue));
         }
