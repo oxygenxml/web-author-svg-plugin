@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.access.EditingSessionContext;
@@ -21,8 +22,7 @@ public class SvgRenderer extends WebappFormControlRenderer {
   /**
    * Logger
    */
-  private static final Logger logger = Logger
-      .getLogger(SvgRenderer.class.getName());
+  private static final Logger logger = LogManager.getLogger(SvgRenderer.class.getName());
 
   /**
    * Render control.
