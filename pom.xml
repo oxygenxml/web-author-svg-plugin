@@ -19,7 +19,11 @@
 
   <developers>
     <developer>
-      <email>cristi_talau@sync.ro</email>
+      <name>Mihai Coanda</name>
+      <email>mihai_coanda@sync.ro</email>
+      <roles>
+        <role>manager</role>
+      </roles>
     </developer>
   </developers>
 
