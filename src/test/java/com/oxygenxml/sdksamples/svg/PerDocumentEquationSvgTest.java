@@ -610,5 +610,11 @@ public class PerDocumentEquationSvgTest {
     public AuthorDocumentFragment createDocumentFragment(int arg0, int arg1, boolean arg2) throws BadLocationException {
       return null;
     }
+
+    @Override
+    public SchemaAwareHandlerResult insertXMLFragmentSchemaAware(String xmlFragment, String xpathLocation,
+        String relativePosition, boolean insertEvenIfInvalid) throws AuthorOperationException {
+      return null;
+    }
   }
 }
