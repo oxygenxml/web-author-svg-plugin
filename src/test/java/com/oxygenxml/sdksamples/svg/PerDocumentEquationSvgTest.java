@@ -620,7 +620,6 @@ public class PerDocumentEquationSvgTest {
 
     @Override
     public AuthorXPathExpressionBuilder getXPathExpressionBuilder(int arg0) throws BadLocationException {
-      // TODO Auto-generated method stub
       return null;
     }
   }
