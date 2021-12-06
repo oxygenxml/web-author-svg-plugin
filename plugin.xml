@@ -7,7 +7,7 @@
     name="SvgPlugin"
     description="Provides support for embedded SVG images (where allowed by the document schema)."
     version="${project.nosnapshot.version}"
-    vendor="Syncro Soft SRL"
+    vendor="Syncro Soft"
     class="com.oxygenxml.sdksamples.svg.SvgPlugin">
     <runtime>
    	  <librariesFolder name="lib"/>
