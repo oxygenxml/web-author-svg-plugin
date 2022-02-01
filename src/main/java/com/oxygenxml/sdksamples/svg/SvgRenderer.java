@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import lombok.extern.slf4j.Slf4j;
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.access.EditingSessionContext;
 import ro.sync.ecss.extensions.api.editor.AuthorInplaceContext;
@@ -18,11 +17,8 @@ import ro.sync.ecss.extensions.api.webapp.formcontrols.WebappFormControlRenderer
  *
  * @author costi_dumitrescu
  */
+@Slf4j
 public class SvgRenderer extends WebappFormControlRenderer {
-  /**
-   * Logger
-   */
-  private static final Logger logger = LogManager.getLogger(SvgRenderer.class.getName());
 
   /**
    * Render control.
@@ -56,7 +52,7 @@ public class SvgRenderer extends WebappFormControlRenderer {
           + "elemId=" + elemId + "&" 
           + "docId=" + docId + "\"></img>");
     } catch (Exception e) {
-      logger.error(e, e);
+      log.error(e, e);
       out.append("<span style=\"color: red\">Error rendering SVG image</span>");
     }
   }
