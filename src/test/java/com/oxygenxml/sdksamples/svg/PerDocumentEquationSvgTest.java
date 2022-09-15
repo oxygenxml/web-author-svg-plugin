@@ -622,5 +622,11 @@ public class PerDocumentEquationSvgTest {
     public AuthorXPathExpressionBuilder getXPathExpressionBuilder(int arg0) throws BadLocationException {
       return null;
     }
+
+    @Override
+    public CharSequence getContentCharSequence() {
+      // TODO Auto-generated method stub
+      return null;
+    }
   }
 }
