@@ -3,22 +3,21 @@ package com.oxygenxml.sdksamples.svg;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.MediaType;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.access.EditingSessionContext;
-import ro.sync.ecss.extensions.api.webapp.plugin.WebappServletPluginExtension;
+import ro.sync.ecss.extensions.api.webapp.plugin.ServletPluginExtension;
+import ro.sync.ecss.extensions.api.webapp.plugin.servlet.ServletException;
+import ro.sync.ecss.extensions.api.webapp.plugin.servlet.http.HttpServletRequest;
+import ro.sync.ecss.extensions.api.webapp.plugin.servlet.http.HttpServletResponse;
 
 /**
  * Svg servlet used to retrieve the svg file after conversion.
  */
-public class SvgServlet extends WebappServletPluginExtension {
+public class SvgServlet extends ServletPluginExtension {
   /**
    * Returns the PNG image that corresponds to the mathml equation.
    * 
